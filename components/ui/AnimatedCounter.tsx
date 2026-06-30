@@ -5,7 +5,7 @@ import { useCountUp } from "@/lib/hooks";
 interface AnimatedCounterProps {
   value: number;
   suffix?: string;
-  label: string;
+  label?: string;
   className?: string;
 }
 
@@ -30,7 +30,7 @@ export default function AnimatedCounter({
         {formatNumber(count)}
         {suffix}
       </div>
-      <div className="text-slate-warm text-sm mt-1 font-medium">{label}</div>
+      {label && <div className="text-slate-warm text-sm mt-1 font-medium">{label}</div>}
     </div>
   );
 }

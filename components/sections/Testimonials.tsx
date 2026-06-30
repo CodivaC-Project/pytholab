@@ -25,18 +25,26 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.4, delay: i * 0.06 }}
-              className="bg-pearl rounded-xl p-6 border-l-2 border-emerald/30 hover:border-emerald transition-colors duration-300"
+              whileHover={{ y: -6, transition: { duration: 0.2 } }}
+              className="bg-pearl rounded-xl p-6 border-l-2 border-emerald/30 hover:border-emerald hover:shadow-lg hover:shadow-navy/5 transition-all duration-300 cursor-default"
             >
               <div className="flex gap-0.5 mb-3">
                 {Array.from({ length: 5 }).map((_, j) => (
-                  <Star
+                  <motion.div
                     key={j}
-                    className={`w-4 h-4 ${
-                      j < t.rating
-                        ? "text-amber-400 fill-current"
-                        : "text-navy/10"
-                    }`}
-                  />
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.06 + j * 0.05, type: "spring", stiffness: 300 }}
+                  >
+                    <Star
+                      className={`w-4 h-4 ${
+                        j < t.rating
+                          ? "text-amber-400 fill-current"
+                          : "text-navy/10"
+                      }`}
+                    />
+                  </motion.div>
                 ))}
               </div>
               <p className="text-sm text-navy/70 leading-relaxed mb-4">

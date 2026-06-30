@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface BadgeProps {
@@ -18,7 +21,8 @@ export default function Badge({
   };
 
   return (
-    <span
+    <motion.span
+      whileHover={{ scale: 1.05 }}
       className={cn(
         "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border",
         variants[variant],
@@ -26,6 +30,6 @@ export default function Badge({
       )}
     >
       {children}
-    </span>
+    </motion.span>
   );
 }

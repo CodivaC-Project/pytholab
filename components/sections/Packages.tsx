@@ -31,17 +31,31 @@ export default function Packages() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: i * 0.15 }}
-              className={`relative bg-white rounded-3xl border p-8 ${
+              whileHover={{
+                y: -8,
+                transition: { duration: 0.25 },
+              }}
+              className={`relative bg-white rounded-3xl border p-8 cursor-default ${
                 pkg.popular
                   ? "border-emerald shadow-xl shadow-emerald/10 scale-[1.02] md:scale-105"
-                  : "border-navy/5 shadow-sm"
+                  : "border-navy/5 shadow-sm hover:shadow-xl hover:shadow-navy/5"
               }`}
             >
               {pkg.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald to-emerald-dark text-white text-xs font-semibold flex items-center gap-1.5">
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald to-emerald-dark text-white text-xs font-semibold flex items-center gap-1.5"
+                >
                   <Star className="w-3 h-3 fill-current" />
                   Most Popular
-                </div>
+                </motion.div>
               )}
 
               <div className="mb-6">
@@ -68,13 +82,20 @@ export default function Packages() {
               </div>
 
               <ul className="space-y-3 mb-8">
-                {pkg.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
+                {pkg.features.map((feature, j) => (
+                  <motion.li
+                    key={feature}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.15 + j * 0.05 }}
+                    className="flex items-start gap-3"
+                  >
                     <div className="w-5 h-5 rounded-full bg-emerald/10 flex items-center justify-center shrink-0 mt-0.5">
                       <Check className="w-3 h-3 text-emerald" />
                     </div>
                     <span className="text-sm text-navy/70">{feature}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
 

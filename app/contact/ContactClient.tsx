@@ -199,21 +199,17 @@ export default function ContactClient() {
 
           {/* Map */}
           <ScrollReveal>
-            <div className="mt-16 rounded-3xl overflow-hidden border border-navy/5 shadow-lg h-96 bg-navy/5 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-12 h-12 text-emerald/30 mx-auto mb-3" />
-                <p className="text-sm text-slate-warm">
-                  Google Maps embed — Near Asarganj More, Shahkund, Bhagalpur
-                </p>
-                <a
-                  href="https://maps.google.com/?q=Trust+Care+Diagnostics+Bhagalpur"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-3 text-sm text-emerald font-medium hover:underline"
-                >
-                  Open in Google Maps
-                </a>
-              </div>
+            <div className="mt-16 rounded-3xl overflow-hidden border border-navy/5 shadow-lg h-96">
+              <iframe
+                src="https://www.google.com/maps?q=25.162078857421875,86.81985473632812&z=17&hl=en&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Trust Care Diagnostics Location"
+              />
             </div>
           </ScrollReveal>
         </div>

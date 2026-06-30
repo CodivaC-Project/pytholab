@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { faqs } from "@/lib/data";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 function FAQItem({
   question,
@@ -55,24 +56,27 @@ export default function FAQ() {
   return (
     <section className="py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <span className="text-xs font-semibold text-emerald uppercase tracking-wider">
-            FAQ
-          </span>
-          <h2 className="font-display text-3xl sm:text-4xl text-navy mt-2 font-semibold">
-            Frequently Asked Questions
-          </h2>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-12">
+            <span className="text-xs font-semibold text-emerald uppercase tracking-wider">
+              FAQ
+            </span>
+            <h2 className="font-display text-3xl sm:text-4xl text-navy mt-2 font-semibold">
+              Frequently Asked Questions
+            </h2>
+          </div>
+        </ScrollReveal>
 
         <div className="space-y-3">
           {faqs.map((faq, i) => (
-            <FAQItem
-              key={i}
-              question={faq.question}
-              answer={faq.answer}
-              isOpen={openIndex === i}
-              onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-            />
+            <ScrollReveal key={i} delay={i * 0.08}>
+              <FAQItem
+                question={faq.question}
+                answer={faq.answer}
+                isOpen={openIndex === i}
+                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              />
+            </ScrollReveal>
           ))}
         </div>
       </div>

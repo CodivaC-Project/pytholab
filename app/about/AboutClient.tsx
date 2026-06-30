@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Target, Eye, Heart } from "lucide-react";
 import Image from "next/image";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import CTA from "@/components/sections/CTA";
 import { timeline } from "@/lib/data";
 
@@ -26,6 +27,12 @@ const values = [
     description:
       "Integrity, accuracy, compassion, innovation, and commitment to excellence in everything we do.",
   },
+];
+
+const founderStats = [
+  { value: 50, suffix: "K+", label: "Patients" },
+  { value: 500, suffix: "+", label: "Tests" },
+  { value: 99.9, suffix: "%", label: "Accuracy" },
 ];
 
 export default function AboutClient() {
@@ -99,17 +106,16 @@ export default function AboutClient() {
                   trust of over 50,000 patients.
                 </p>
                 <div className="grid grid-cols-3 gap-4 pt-4">
-                  {[
-                    { value: "50K+", label: "Patients" },
-                    { value: "500+", label: "Tests" },
-                    { value: "99.9%", label: "Accuracy" },
-                  ].map((stat) => (
+                  {founderStats.map((stat) => (
                     <div
                       key={stat.label}
                       className="text-center p-4 rounded-xl bg-navy/5"
                     >
                       <div className="font-display text-2xl text-navy font-bold">
-                        {stat.value}
+                        <AnimatedCounter
+                          value={stat.value}
+                          suffix={stat.suffix}
+                        />
                       </div>
                       <div className="text-xs text-slate-warm">
                         {stat.label}
@@ -129,7 +135,10 @@ export default function AboutClient() {
           <div className="grid md:grid-cols-3 gap-8">
             {values.map((item, i) => (
               <ScrollReveal key={item.title} delay={i * 0.15}>
-                <div className="bg-white rounded-2xl border border-navy/5 p-8 text-center h-full">
+                <motion.div
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className="bg-white rounded-2xl border border-navy/5 p-8 text-center h-full hover:shadow-xl hover:shadow-navy/5 transition-shadow duration-300"
+                >
                   <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald/10 flex items-center justify-center text-emerald mb-6">
                     <item.icon className="w-7 h-7" />
                   </div>
@@ -139,7 +148,7 @@ export default function AboutClient() {
                   <p className="text-sm text-slate-dark leading-relaxed">
                     {item.description}
                   </p>
-                </div>
+                </motion.div>
               </ScrollReveal>
             ))}
           </div>
@@ -158,16 +167,28 @@ export default function AboutClient() {
           </ScrollReveal>
 
           <div className="relative">
-            <div className="absolute left-8 top-0 bottom-0 w-px bg-emerald/20" />
+            <motion.div
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute left-8 top-0 bottom-0 w-px bg-emerald/20 origin-top"
+            />
 
             <div className="space-y-12">
               {timeline.map((item, i) => (
                 <ScrollReveal key={item.year} delay={i * 0.1}>
                   <div className="flex gap-8">
                     <div className="relative z-10 shrink-0">
-                      <div className="w-16 h-16 rounded-2xl bg-emerald flex items-center justify-center text-white font-mono text-sm font-bold">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1, type: "spring", stiffness: 300 }}
+                        className="w-16 h-16 rounded-2xl bg-emerald flex items-center justify-center text-white font-mono text-sm font-bold"
+                      >
                         {item.year.slice(2)}
-                      </div>
+                      </motion.div>
                     </div>
                     <div className="pt-2">
                       <div className="text-sm text-emerald font-semibold mb-1">

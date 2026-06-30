@@ -66,7 +66,7 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-medium rounded-full transition-all duration-300 focus-ring cursor-pointer";
+    "inline-flex items-center justify-center font-medium rounded-full transition-all duration-300 focus-ring cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variants = {
     primary:
@@ -85,12 +85,18 @@ export default function Button({
   };
 
   const buttonContent = href ? (
-    <Link
-      href={href}
-      className={cn(baseStyles, variants[variant], sizes[size], className)}
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.97 }}
+      className="inline-block"
     >
-      {children}
-    </Link>
+      <Link
+        href={href}
+        className={cn(baseStyles, variants[variant], sizes[size], className)}
+      >
+        {children}
+      </Link>
+    </motion.div>
   ) : (
     <motion.button
       whileHover={{ scale: 1.02 }}

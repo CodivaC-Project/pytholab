@@ -1,24 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useScroll, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone } from "lucide-react";
 import { navItems, siteConfig } from "@/lib/data";
 import Button from "@/components/ui/Button";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = scrollY.on("change", (latest) => {
+      setScrolled(latest > 50);
+    });
+    return () => unsubscribe();
+  }, [scrollY]);
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl shadow-lg shadow-navy/5">
+      <motion.header
+        animate={{
+          paddingTop: scrolled ? 8 : 0,
+          paddingBottom: scrolled ? 8 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl shadow-lg shadow-navy/5"
+        style={{
+          backgroundColor: scrolled
+            ? "rgba(255, 255, 255, 0.95)"
+            : "rgba(255, 255, 255, 0.7)",
+        }}
+      >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <motion.div
+            animate={{ height: scrolled ? 56 : 64 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center justify-between md:!h-20"
+          >
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-emerald/25 group-hover:shadow-emerald/40 transition-shadow">
+              <motion.div
+                animate={{ scale: scrolled ? 0.9 : 1 }}
+                transition={{ duration: 0.3 }}
+                className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-emerald/25 group-hover:shadow-emerald/40 transition-shadow"
+              >
                 <Image
                   src="/logo.png"
                   alt="Trust Care Diagnostics Logo"
@@ -27,7 +56,7 @@ export default function Navbar() {
                   unoptimized
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </motion.div>
               <div className="hidden sm:block">
                 <div className="font-display text-lg text-navy leading-tight font-semibold">
                   Trust Care
@@ -75,9 +104,9 @@ export default function Navbar() {
                 )}
               </button>
             </div>
-          </div>
+          </motion.div>
         </nav>
-      </header>
+      </motion.header>
 
       {/* Mobile Menu */}
       <AnimatePresence>

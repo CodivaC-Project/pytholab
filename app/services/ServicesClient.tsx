@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Droplets,
   Activity,
@@ -73,7 +73,10 @@ export default function ServicesClient() {
 
               return (
                 <ScrollReveal key={service.title} delay={i * 0.1}>
-                  <div className="bg-white rounded-2xl border border-navy/5 p-6 h-full">
+                  <motion.div
+                    whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                    className="bg-white rounded-2xl border border-navy/5 p-6 h-full hover:shadow-xl hover:shadow-navy/5 transition-shadow duration-300"
+                  >
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-emerald/10 text-emerald">
                       {Icon && <Icon className="w-6 h-6" />}
                     </div>
@@ -93,7 +96,7 @@ export default function ServicesClient() {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 </ScrollReveal>
               );
             })}
@@ -150,31 +153,39 @@ export default function ServicesClient() {
               <div className="hidden md:block">Category</div>
               <div className="text-right">Price</div>
             </div>
-            {filteredTests.length > 0 ? (
-              filteredTests.map((test, i) => (
+            <AnimatePresence mode="popLayout">
+              {filteredTests.length > 0 ? (
+                filteredTests.map((test) => (
+                  <motion.div
+                    key={test.name}
+                    layout
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2 }}
+                    className="grid grid-cols-[1fr,auto] md:grid-cols-[2fr,1fr,auto] gap-4 px-4 py-3 border-t border-navy/5 items-center hover:bg-navy/[0.02] transition-colors"
+                  >
+                    <div className="text-sm text-navy font-medium">
+                      {test.name}
+                    </div>
+                    <div className="hidden md:block text-xs text-slate-warm">
+                      {test.category}
+                    </div>
+                    <div className="text-right text-sm font-semibold text-emerald">
+                      {formatPrice(test.price)}
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
                 <motion.div
-                  key={test.name}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.02 }}
-                  className="grid grid-cols-[1fr,auto] md:grid-cols-[2fr,1fr,auto] gap-4 px-4 py-3 border-t border-navy/5 items-center hover:bg-navy/[0.02] transition-colors"
+                  className="px-4 py-12 text-center text-sm text-slate-warm"
                 >
-                  <div className="text-sm text-navy font-medium">
-                    {test.name}
-                  </div>
-                  <div className="hidden md:block text-xs text-slate-warm">
-                    {test.category}
-                  </div>
-                  <div className="text-right text-sm font-semibold text-emerald">
-                    {formatPrice(test.price)}
-                  </div>
+                  No tests found matching your search.
                 </motion.div>
-              ))
-            ) : (
-              <div className="px-4 py-12 text-center text-sm text-slate-warm">
-                No tests found matching your search.
-              </div>
-            )}
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </section>

@@ -2,18 +2,60 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
 import { allTests, packages } from "@/lib/data";
 import Input, { Textarea } from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
+const fieldVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.06, duration: 0.4, ease: "easeOut" as const },
+  }),
+};
+
 export default function BookTestClient() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("Morning (7 AM - 10 AM)");
+  const [test, setTest] = useState("");
+  const [collection, setCollection] = useState("lab");
+  const [notes, setNotes] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/book-test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email, age, date, time, test, collection, notes }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -95,22 +137,55 @@ export default function BookTestClient() {
               </h2>
 
               <div className="space-y-5">
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <Input label="Full Name" placeholder="John Doe" required />
+                <motion.div
+                  custom={0}
+                  initial="hidden"
+                  animate="visible"
+                  variants={fieldVariants}
+                  className="grid sm:grid-cols-2 gap-5"
+                >
+                  <Input
+                    label="Full Name"
+                    placeholder="John Doe"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                   <Input
                     label="Phone Number"
                     type="tel"
                     placeholder="+91 9876543210"
                     required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
-                </div>
-                <Input
-                  label="Email"
-                  type="email"
-                  placeholder="john@example.com"
-                />
-                <Input label="Age" type="number" placeholder="30" />
-                <div className="grid sm:grid-cols-2 gap-5">
+                </motion.div>
+                <motion.div custom={1} initial="hidden" animate="visible" variants={fieldVariants}>
+                  <Input
+                    label="Email"
+                    type="email"
+                    placeholder="john@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </motion.div>
+                <motion.div custom={2} initial="hidden" animate="visible" variants={fieldVariants}>
+                  <Input
+                    label="Age"
+                    type="number"
+                    placeholder="30"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                  />
+                </motion.div>
+                <motion.div
+                  custom={3}
+                  initial="hidden"
+                  animate="visible"
+                  variants={fieldVariants}
+                  className="grid sm:grid-cols-2 gap-5"
+                >
                   <div className="space-y-1.5">
                     <label className="block text-sm font-medium text-navy">
                       Preferred Date
@@ -118,6 +193,9 @@ export default function BookTestClient() {
                     <div className="relative">
                       <input
                         type="date"
+                        required
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border border-navy/10 bg-white text-navy transition-all duration-300 focus:outline-none focus:border-emerald focus:ring-2 focus:ring-emerald/20"
                       />
                     </div>
@@ -126,7 +204,11 @@ export default function BookTestClient() {
                     <label className="block text-sm font-medium text-navy">
                       Preferred Time
                     </label>
-                    <select className="w-full px-4 py-3 rounded-xl border border-navy/10 bg-white text-navy transition-all duration-300 focus:outline-none focus:border-emerald focus:ring-2 focus:ring-emerald/20">
+                    <select
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-navy/10 bg-white text-navy transition-all duration-300 focus:outline-none focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                    >
                       <option>Morning (7 AM - 10 AM)</option>
                       <option>Late Morning (10 AM - 12 PM)</option>
                       <option>Afternoon (12 PM - 3 PM)</option>
@@ -134,68 +216,112 @@ export default function BookTestClient() {
                       <option>Evening (6 PM - 9 PM)</option>
                     </select>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-navy">
-                    Select Test or Package
-                  </label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-navy/10 bg-white text-navy transition-all duration-300 focus:outline-none focus:border-emerald focus:ring-2 focus:ring-emerald/20">
-                    <optgroup label="Health Packages">
-                      {packages.map((pkg) => (
-                        <option key={pkg.id} value={pkg.id}>
-                          {pkg.name} — {pkg.tests} tests (₹{pkg.price})
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Individual Tests">
-                      {allTests.map((test) => (
-                        <option key={test.name} value={test.name}>
-                          {test.name} — ₹{test.price}
-                        </option>
-                      ))}
-                    </optgroup>
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-navy">
-                    Sample Collection
-                  </label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="collection"
-                        value="lab"
-                        defaultChecked
-                        className="w-4 h-4 text-emerald accent-emerald"
-                      />
-                      <span className="text-sm text-navy/70">Visit Lab</span>
+                <motion.div custom={4} initial="hidden" animate="visible" variants={fieldVariants}>
+                  <div className="space-y-1.5">
+                    <label className="block text-sm font-medium text-navy">
+                      Select Test or Package
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="collection"
-                        value="home"
-                        className="w-4 h-4 text-emerald accent-emerald"
-                      />
-                      <span className="text-sm text-navy/70">
-                        Home Collection
-                      </span>
-                    </label>
+                    <select
+                      required
+                      value={test}
+                      onChange={(e) => setTest(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-navy/10 bg-white text-navy transition-all duration-300 focus:outline-none focus:border-emerald focus:ring-2 focus:ring-emerald/20"
+                    >
+                      <option value="" disabled>
+                        Choose a test or package...
+                      </option>
+                      <optgroup label="Health Packages">
+                        {packages.map((pkg) => (
+                          <option key={pkg.id} value={pkg.id}>
+                            {pkg.name} — {pkg.tests} tests (₹{pkg.price})
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Individual Tests">
+                        {allTests.map((test) => (
+                          <option key={test.name} value={test.name}>
+                            {test.name} — ₹{test.price}
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
                   </div>
-                </div>
+                </motion.div>
 
-                <Textarea
-                  label="Additional Notes"
-                  placeholder="Any specific requirements or instructions..."
-                  rows={3}
-                />
+                <motion.div custom={5} initial="hidden" animate="visible" variants={fieldVariants}>
+                  <div className="space-y-1.5">
+                    <label className="block text-sm font-medium text-navy">
+                      Sample Collection
+                    </label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="collection"
+                          value="lab"
+                          checked={collection === "lab"}
+                          onChange={(e) => setCollection(e.target.value)}
+                          className="w-4 h-4 text-emerald accent-emerald"
+                        />
+                        <span className="text-sm text-navy/70">Visit Lab</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="collection"
+                          value="home"
+                          checked={collection === "home"}
+                          onChange={(e) => setCollection(e.target.value)}
+                          className="w-4 h-4 text-emerald accent-emerald"
+                        />
+                        <span className="text-sm text-navy/70">
+                          Home Collection
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </motion.div>
 
-                <Button type="submit" size="lg" className="w-full" magnetic>
-                  Book Appointment
-                </Button>
+                <motion.div custom={6} initial="hidden" animate="visible" variants={fieldVariants}>
+                  <Textarea
+                    label="Additional Notes"
+                    placeholder="Any specific requirements or instructions..."
+                    rows={3}
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                  />
+                </motion.div>
+
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3"
+                  >
+                    {error}
+                  </motion.div>
+                )}
+
+                <motion.div custom={7} initial="hidden" animate="visible" variants={fieldVariants}>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    magnetic
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Sending...
+                      </span>
+                    ) : (
+                      "Book Appointment"
+                    )}
+                  </Button>
+                </motion.div>
 
                 <p className="text-xs text-center text-slate-warm">
                   By booking, you agree to our terms. Our team will contact you

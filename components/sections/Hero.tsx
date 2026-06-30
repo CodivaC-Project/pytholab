@@ -1,13 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Shield, Clock, Award } from "lucide-react";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const cardY = useTransform(scrollYProgress, [0, 1], [0, -30]);
+
   return (
-    <section className="relative min-h-[90vh] flex items-center bg-white overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-[90vh] flex items-center bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Content */}
@@ -70,26 +81,32 @@ export default function Hero() {
                 { icon: Shield, text: "NABL Certified" },
                 { icon: Clock, text: "Same Day Reports" },
                 { icon: Award, text: "99.9% Accuracy" },
-              ].map(({ icon: Icon, text }) => (
-                <div
+              ].map(({ icon: Icon, text }, i) => (
+                <motion.div
                   key={text}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + i * 0.1 }}
                   className="flex items-center gap-1.5 text-xs text-navy/50"
                 >
                   <Icon className="w-3.5 h-3.5 text-emerald" />
                   {text}
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
 
-          {/* Right: Lab photo */}
+          {/* Right: Lab photo with parallax */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.15 }}
             className="relative"
           >
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-navy/5">
+            <motion.div
+              style={{ y: imageY, scale: imageScale }}
+              className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-navy/5"
+            >
               <Image
                 src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800&q=80"
                 alt="Modern diagnostic laboratory with automated analyzers"
@@ -99,13 +116,14 @@ export default function Hero() {
               />
               {/* Small accent overlay */}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald" />
-            </div>
+            </motion.div>
 
-            {/* Floating stat card */}
+            {/* Floating stat card with counter-parallax */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
+              style={{ y: cardY }}
               className="absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl shadow-navy/8 border border-navy/5 px-5 py-3.5 flex items-center gap-3"
             >
               <div className="w-10 h-10 rounded-lg bg-emerald/10 flex items-center justify-center">

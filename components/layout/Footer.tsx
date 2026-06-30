@@ -11,6 +11,7 @@ import {
   ArrowUp,
 } from "lucide-react";
 import { siteConfig } from "@/lib/data";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -52,6 +53,13 @@ const services = [
   "Vitamins & Minerals",
 ];
 
+const footerColumns = [
+  { key: "brand" },
+  { key: "quickLinks" },
+  { key: "services" },
+  { key: "contact" },
+] as const;
+
 export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -64,128 +72,140 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl overflow-hidden">
-                <Image
-                  src="/logo.png"
-                  alt="Trust Care Diagnostics Logo"
-                  width={40}
-                  height={40}
-                  unoptimized
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <div className="font-display text-lg leading-tight font-semibold">
-                  Trust Care
+          <ScrollReveal delay={0}>
+            <div className="space-y-4">
+              <Link href="/" className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl overflow-hidden">
+                  <Image
+                    src="/logo.png"
+                    alt="Trust Care Diagnostics Logo"
+                    width={40}
+                    height={40}
+                    unoptimized
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="text-[10px] text-white/50 tracking-widest uppercase">
-                  Diagnostics
+                <div>
+                  <div className="font-display text-lg leading-tight font-semibold">
+                    Trust Care
+                  </div>
+                  <div className="text-[10px] text-white/50 tracking-widest uppercase">
+                    Diagnostics
+                  </div>
                 </div>
+              </Link>
+              <p className="text-white/60 text-sm leading-relaxed">
+                {siteConfig.description}
+              </p>
+              <div className="flex gap-3">
+                <motion.a
+                  href={siteConfig.social.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-emerald/20 hover:text-emerald-light transition-all"
+                >
+                  <FacebookIcon className="w-4 h-4" />
+                </motion.a>
+                <motion.a
+                  href={siteConfig.social.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-emerald/20 hover:text-emerald-light transition-all"
+                >
+                  <InstagramIcon className="w-4 h-4" />
+                </motion.a>
               </div>
-            </Link>
-            <p className="text-white/60 text-sm leading-relaxed">
-              {siteConfig.description}
-            </p>
-            <div className="flex gap-3">
-              <a
-                href={siteConfig.social.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-emerald/20 hover:text-emerald-light transition-all"
-              >
-                <FacebookIcon className="w-4 h-4" />
-              </a>
-              <a
-                href={siteConfig.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-emerald/20 hover:text-emerald-light transition-all"
-              >
-                <InstagramIcon className="w-4 h-4" />
-              </a>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="font-display text-base mb-4 font-semibold">
-              Quick Links
-            </h3>
-            <ul className="space-y-2.5">
-              {quickLinks.map((item) => (
-                <li key={item.href + item.label}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-white/60 hover:text-emerald-light transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ScrollReveal delay={0.1}>
+            <div>
+              <h3 className="font-display text-base mb-4 font-semibold">
+                Quick Links
+              </h3>
+              <ul className="space-y-2.5">
+                {quickLinks.map((item) => (
+                  <li key={item.href + item.label}>
+                    <Link
+                      href={item.href}
+                      className="text-sm text-white/60 hover:text-emerald-light transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ScrollReveal>
 
           {/* Services */}
-          <div>
-            <h3 className="font-display text-base mb-4 font-semibold">
-              Services
-            </h3>
-            <ul className="space-y-2.5">
-              {services.map((service) => (
-                <li key={service}>
-                  <Link
-                    href="/services"
-                    className="text-sm text-white/60 hover:text-emerald-light transition-colors"
-                  >
-                    {service}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ScrollReveal delay={0.2}>
+            <div>
+              <h3 className="font-display text-base mb-4 font-semibold">
+                Services
+              </h3>
+              <ul className="space-y-2.5">
+                {services.map((service) => (
+                  <li key={service}>
+                    <Link
+                      href="/services"
+                      className="text-sm text-white/60 hover:text-emerald-light transition-colors"
+                    >
+                      {service}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ScrollReveal>
 
           {/* Contact */}
-          <div>
-            <h3 className="font-display text-base mb-4 font-semibold">
-              Contact Us
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href={`tel:${siteConfig.phone}`}
-                  className="flex items-start gap-3 text-sm text-white/60 hover:text-emerald-light transition-colors"
-                >
-                  <Phone className="w-4 h-4 mt-0.5 shrink-0" />
+          <ScrollReveal delay={0.3}>
+            <div>
+              <h3 className="font-display text-base mb-4 font-semibold">
+                Contact Us
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <a
+                    href={`tel:${siteConfig.phone}`}
+                    className="flex items-start gap-3 text-sm text-white/60 hover:text-emerald-light transition-colors"
+                  >
+                    <Phone className="w-4 h-4 mt-0.5 shrink-0" />
+                    <div>
+                      <div>{siteConfig.phone}</div>
+                      <div>{siteConfig.phone2}</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    className="flex items-start gap-3 text-sm text-white/60 hover:text-emerald-light transition-colors"
+                  >
+                    <Mail className="w-4 h-4 mt-0.5 shrink-0" />
+                    {siteConfig.email}
+                  </a>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-white/60">
+                  <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
+                  {siteConfig.address}
+                </li>
+                <li className="flex items-start gap-3 text-sm text-white/60">
+                  <Clock className="w-4 h-4 mt-0.5 shrink-0" />
                   <div>
-                    <div>{siteConfig.phone}</div>
-                    <div>{siteConfig.phone2}</div>
+                    <div>{siteConfig.hours.weekday}</div>
+                    <div>{siteConfig.hours.sunday}</div>
                   </div>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${siteConfig.email}`}
-                  className="flex items-start gap-3 text-sm text-white/60 hover:text-emerald-light transition-colors"
-                >
-                  <Mail className="w-4 h-4 mt-0.5 shrink-0" />
-                  {siteConfig.email}
-                </a>
-              </li>
-              <li className="flex items-start gap-3 text-sm text-white/60">
-                <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-                {siteConfig.address}
-              </li>
-              <li className="flex items-start gap-3 text-sm text-white/60">
-                <Clock className="w-4 h-4 mt-0.5 shrink-0" />
-                <div>
-                  <div>{siteConfig.hours.weekday}</div>
-                  <div>{siteConfig.hours.sunday}</div>
-                </div>
-              </li>
-            </ul>
-          </div>
+                </li>
+              </ul>
+            </div>
+          </ScrollReveal>
         </div>
 
         {/* Bottom */}
@@ -207,7 +227,7 @@ export default function Footer() {
           </div>
           <motion.button
             onClick={scrollToTop}
-            whileHover={{ y: -2 }}
+            whileHover={{ y: -4, scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-emerald/20 hover:text-emerald-light transition-all"
             aria-label="Scroll to top"

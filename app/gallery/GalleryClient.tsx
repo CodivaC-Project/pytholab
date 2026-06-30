@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Camera } from "lucide-react";
 import { galleryImages } from "@/lib/data";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const categories = [
   "All",
@@ -64,29 +63,42 @@ export default function GalleryClient() {
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filtered.map((img, i) => (
-              <ScrollReveal key={img.alt} delay={i * 0.05}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  onClick={() => setSelectedImage(i)}
-                  className="aspect-square rounded-2xl bg-navy/5 relative overflow-hidden group cursor-pointer w-full"
+          <motion.div
+            layout
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          >
+            <AnimatePresence mode="popLayout">
+              {filtered.map((img) => (
+                <motion.div
+                  key={img.alt}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
                 >
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                    <Camera className="w-8 h-8 text-navy/20 group-hover:text-emerald/40 transition-colors" />
-                    <span className="text-xs text-navy/30 group-hover:text-navy/50 transition-colors px-2 text-center">
-                      {img.alt}
-                    </span>
-                  </div>
-                  <div className="absolute bottom-2 left-2">
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/80 text-navy/60">
-                      {img.category}
-                    </span>
-                  </div>
-                </motion.button>
-              </ScrollReveal>
-            ))}
-          </div>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedImage(filtered.indexOf(img))}
+                    className="aspect-square rounded-2xl bg-navy/5 relative overflow-hidden group cursor-pointer w-full"
+                  >
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                      <Camera className="w-8 h-8 text-navy/20 group-hover:text-emerald/40 transition-colors" />
+                      <span className="text-xs text-navy/30 group-hover:text-navy/50 transition-colors px-2 text-center">
+                        {img.alt}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-2 left-2">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/80 text-navy/60">
+                        {img.category}
+                      </span>
+                    </div>
+                  </motion.button>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
 
